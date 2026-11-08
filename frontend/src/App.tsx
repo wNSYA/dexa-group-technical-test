@@ -1,37 +1,66 @@
 // frontend/src/App.tsx
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useState } from 'react';
+import { AuthProvider, useAuth } from './AuthContext';
+import { Attendance } from './Attendance';
+import { AdminDashboard } from './AdminDashboard';
+import { EmployeeManager } from './EmployeeManager';
 
-interface ApiResponse {
-  message: string;
-}
-
-function App() {
-  const [data, setData] = useState<string>('Loading...');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get<ApiResponse>('http://localhost:3000/api/hello');
-        setData(response.data.message);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-        setData('Failed to load data from backend.');
-      }
-    };
-
-    fetchData();
-  }, []);
-
+const Login = () => {
+  const { login } = useAuth();
+  const [u, setU] = useState('');
+  const [p, setP] = useState('');
+  
   return (
-    <div style={{ padding: '2rem', fontFamily: 'system-ui' }}>
-      <h1>React + NestJS Template</h1>
-      <div style={{ padding: '1rem', border: '1px solid #ccc', borderRadius: '8px' }}>
-        <h2>Backend Status:</h2>
-        <p>{data}</p>
-      </div>
+    <div style={{ display: 'flex', height: '100vh', alignItems: 'center', justifyContent: 'center' }}>
+      <form className="card" onSubmit={(e) => { e.preventDefault(); login(u, p); }} style={{ width: '350px' }}>
+        <h2 style={{ textAlign: 'center' }}>Sign In</h2>
+        <input placeholder="Username" value={u} onChange={e => setU(e.target.value)} />
+        <input type="password" placeholder="Password" value={p} onChange={e => setP(e.target.value)} />
+        <button type="submit" style={{ width: '100%' }}>Log In</button>
+      </form>
     </div>
   );
-}
+};
 
-export default App;
+const Dashboard: React.FC = () => {
+  const { user, logout } = useAuth();
+  const [activeTab, setActiveTab] = useState('camera');
+
+  return (
+    <div>
+      <nav className="navbar flex-between">
+        <div className="flex-gap">
+          <h3 style={{ margin: 0 }}>HR Portal</h3>
+          <div className="nav-links flex-gap">
+            <button className={activeTab === 'camera' ? 'active' : ''} onClick={() => setActiveTab('camera')}>Camera</button>
+            {user?.role === 'Admin' && (
+              <>
+                <button className={activeTab === 'logs' ? 'active' : ''} onClick={() => setActiveTab('logs')}>Logs</button>
+                <button className={activeTab === 'employees' ? 'active' : ''} onClick={() => setActiveTab('employees')}>Employees</button>
+              </>
+            )}
+          </div>
+        </div>
+        <div className="flex-gap">
+          <span className="text-sm">{user?.firstName} ({user?.role})</span>
+          <button className="outline" onClick={logout}>Log Out</button>
+        </div>
+      </nav>
+
+      <main className="container">
+        {activeTab === 'camera' && <Attendance />}
+        {activeTab === 'logs' && user?.role === 'Admin' && <AdminDashboard />}
+        {activeTab === 'employees' && user?.role === 'Admin' && <EmployeeManager />}
+      </main>
+    </div>
+  );
+};
+
+const Main = () => {
+  const { user } = useAuth();
+  return user ? <Dashboard /> : <Login />;
+};
+
+export default function App() {
+  return <AuthProvider><Main /></AuthProvider>;
+}
