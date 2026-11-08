@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { Role } from './role.entity';
-import { Employee } from './employee.entity';
-import { Account } from './account.entity';
+import { Role } from './role/role.entity';
+import { Employee } from './employee/employee.entity';
+import { Account } from './account/account.entity';
 import { SeederService } from './seeder.service';
 import { JwtModule } from '@nestjs/jwt';
+import { AuthModule } from './auth/auth.module';
+import { EmployeeModule } from './employee/employee.module';
+import { AccountModule } from './account/account.module';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -39,8 +41,11 @@ import { JwtModule } from '@nestjs/jwt';
         signOptions: { expiresIn: '1d' }, // Token expires in 1 day
       }),
     }),
+    AuthModule,
+    EmployeeModule,
+    AccountModule,
+    RoleModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, SeederService],
+  providers: [SeederService],
 })
 export class AppModule {}

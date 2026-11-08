@@ -1,18 +1,16 @@
-// identity-service/src/app.controller.ts
 import { Controller } from '@nestjs/common';
 import { MessagePattern, Payload } from '@nestjs/microservices';
-import { AppService } from './app.service';
+import { AuthService } from './auth.service';
 
 @Controller()
-export class AppController {
-  constructor(private readonly appService: AppService) {}
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
 
   @MessagePattern({ cmd: 'login' })
   login(@Payload() credentials: any) {
-    return this.appService.login(credentials);
+    return this.authService.login(credentials);
   }
 
-  
   @MessagePattern({ cmd: 'ping' })
   pingIdentity() {
     return { service: 'Identity', status: 'Connected to identity_db' };

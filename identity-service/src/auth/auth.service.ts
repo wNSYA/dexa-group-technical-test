@@ -4,12 +4,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { Account } from './account.entity';
+import { Account } from '../account/account.entity';
 import { RpcException } from '@nestjs/microservices';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
-export class AppService {
+export class AuthService {
   constructor(
     @InjectRepository(Account)
     private accountRepo: Repository<Account>,

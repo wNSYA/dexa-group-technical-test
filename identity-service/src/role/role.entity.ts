@@ -1,6 +1,6 @@
 // identity-service/src/role.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
-import { Account } from './account.entity';
+import { Account } from '../account/account.entity';
 
 @Entity()
 export class Role {

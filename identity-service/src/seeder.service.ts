@@ -3,9 +3,9 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Role } from './role.entity';
-import { Employee } from './employee.entity';
-import { Account } from './account.entity';
+import { Role } from './role/role.entity';
+import { Employee } from './employee/employee.entity';
+import { Account } from './account/account.entity';
 
 @Injectable()
 export class SeederService implements OnModuleInit {

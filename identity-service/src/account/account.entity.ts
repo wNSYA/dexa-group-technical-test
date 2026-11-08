@@ -1,7 +1,7 @@
 // identity-service/src/account.entity.ts
 import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
-import { Role } from './role.entity';
-import { Employee } from './employee.entity';
+import { Role } from '../role/role.entity';
+import { Employee } from '../employee/employee.entity';
 
 @Entity()
 export class Account {
