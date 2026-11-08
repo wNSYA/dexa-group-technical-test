@@ -12,7 +12,6 @@ import { AttendanceController } from './attendance.controller';
         options: { host: '127.0.0.1', port: 3002 },
       },
     ]),
-    // JwtModule is completely removed from here!
   ],
   controllers: [AttendanceController]
 })
