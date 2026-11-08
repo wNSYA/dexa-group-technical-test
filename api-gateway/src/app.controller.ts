@@ -1,7 +1,11 @@
 // api-gateway/src/app.controller.ts
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get, Post, Body, Inject, HttpException, HttpStatus, UseGuards, Request } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { lastValueFrom } from 'rxjs'; // 1. Import this from rxjs
+import { lastValueFrom, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { AuthGuard } from './auth.guard';
+import { RolesGuard } from './roles.guard';
+import { Roles } from './roles.decorator';
 
 @Controller('api')
 export class AppController {
@@ -10,8 +14,22 @@ export class AppController {
     @Inject('ATTENDANCE_SERVICE') private attendanceClient: ClientProxy,
   ) {}
 
+  @Post('auth/login')
+  async login(@Body() loginDto: any) {
+    return await lastValueFrom(
+      this.identityClient.send({ cmd: 'login' }, loginDto).pipe(
+        catchError((error) => {
+          return throwError(() => new HttpException(error.message, HttpStatus.UNAUTHORIZED));
+        })
+      )
+    );
+  }
+
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('Admin')
   @Get('status')
-  async getStatus() { // 2. Add async here
+  async getStatus(@Request() req) { 
+    console.log('User making request:', req.user.username);
     // 3. Await the response from each microservice using lastValueFrom
     const identityResponse = await lastValueFrom(
       this.identityClient.send({ cmd: 'ping' }, {})

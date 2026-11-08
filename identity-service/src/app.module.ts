@@ -7,6 +7,7 @@ import { Role } from './role.entity';
 import { Employee } from './employee.entity';
 import { Account } from './account.entity';
 import { SeederService } from './seeder.service';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -30,6 +31,14 @@ import { SeederService } from './seeder.service';
       }),
     }),
     TypeOrmModule.forFeature([Role, Employee, Account]),
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '1d' }, // Token expires in 1 day
+      }),
+    }),
   ],
   controllers: [AppController],
   providers: [AppService, SeederService],
