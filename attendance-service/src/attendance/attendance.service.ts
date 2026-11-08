@@ -20,4 +20,12 @@ export class AttendanceService {
     
     return await this.attendanceRepo.save(record);
   }
+  async findAll() {
+  // Find all records and sort them by the newest first
+  return await this.attendanceRepo.find({
+    order: {
+      timestamp: 'DESC',
+    },
+  });
+  }
 }

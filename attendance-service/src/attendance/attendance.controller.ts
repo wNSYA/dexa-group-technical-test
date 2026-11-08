@@ -12,4 +12,9 @@ export class AttendanceController {
   handleCheckIn(@Payload() data: { employeeId: number; type: AttendanceType; photoUrl: string }) {
     return this.attendanceService.checkIn(data);
   }
+
+  @MessagePattern({ cmd: 'get_all_attendance' })
+  getAll() {
+    return this.attendanceService.findAll();
+  }
 }
