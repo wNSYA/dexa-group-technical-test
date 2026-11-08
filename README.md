@@ -94,13 +94,11 @@ The Vite frontend will typically run on `http://localhost:5173`.
 
 - `npm run start:dev` - Starts the application in watch mode
 - `npm run build` - Builds the application for production
-- `npm run test` - Runs unit tests
 
 ### Frontend (run inside `/frontend`)
 
 - `npm run dev` - Starts the Vite development server
 - `npm run build` - Builds the React app for production
-- `npm run lint` - Runs ESLint
 
 ## Deployment
 

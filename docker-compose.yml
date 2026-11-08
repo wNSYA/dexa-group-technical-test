@@ -1,18 +1,32 @@
-# /docker-compose.yml
 services:
-  mysql-db:
+  identity-db:
     image: mysql:8.0
-    container_name: nestjs-mysql
+    container_name: identity-mysql
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_DATABASE: identity_db
       MYSQL_USER: ${DB_USER}
       MYSQL_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - identity_data:/var/lib/mysql
+
+  attendance-db:
+    image: mysql:8.0
+    container_name: attendance-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: attendance_db
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "3307:3306" # Maps local port 3307 to container port 3306
+    volumes:
+      - attendance_data:/var/lib/mysql
 
 volumes:
-  mysql_data:
+  identity_data:
+  attendance_data:
