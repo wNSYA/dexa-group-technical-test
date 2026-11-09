@@ -17,4 +17,8 @@ export class AttendanceController {
   getAll() {
     return this.attendanceService.findAll();
   }
+  @MessagePattern({ cmd: 'get_latest_status' })
+  getLatestStatus(@Payload() employeeId: number) {
+    return this.attendanceService.getLatestRecord(employeeId);
+  }
 }

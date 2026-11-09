@@ -41,11 +41,17 @@ export const EmployeeManager: React.FC = () => {
     setForm({ username: emp.username, password: '', firstName: emp.firstName, lastName: emp.lastName, division: emp.division, roleName: emp.role });
   };
 
+  const handleCancel = () => {
+    setEditingId(null);
+    // Clear the form fields back to their defaults
+    setForm({ username: '', password: '', firstName: '', lastName: '', division: '', roleName: 'Staff' });
+  };
+
   return (
     <div className="card">
       <div className="flex-between">
         <h2>Employee Management</h2>
-        {editingId && <button className="outline" onClick={() => setEditingId(null)}>Cancel Edit</button>}
+        {editingId && <button className="outline" onClick={handleCancel}>Cancel Edit</button>}
       </div>
 
       <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '2rem' }}>

@@ -28,4 +28,12 @@ export class AttendanceService {
     },
   });
   }
+
+  async getLatestRecord(employeeId: number) {
+  // Find the absolute latest record for this specific employee
+  return await this.attendanceRepo.findOne({
+    where: { employeeId },
+    order: { timestamp: 'DESC' },
+  });
+  }
 }

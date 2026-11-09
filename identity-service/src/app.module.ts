@@ -30,6 +30,7 @@ import { RoleModule } from './role/role.module';
         database: 'identity_db', // Explicitly use the Identity database
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true, 
+        timezone: 'Z',
       }),
     }),
     TypeOrmModule.forFeature([Role, Employee, Account]),

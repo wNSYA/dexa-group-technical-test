@@ -105,4 +105,15 @@ export class AttendanceController {
       throw new HttpException('Failed to fetch dashboard data', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+  @UseGuards(AuthGuard) // Only requires login, not Admin role
+  @Get('status')
+  async getStatus(@Request() req) {
+    const employeeId = req.user.employeeId;
+    
+    return await lastValueFrom(
+      this.attendanceClient.send({ cmd: 'get_latest_status' }, employeeId).pipe(
+        catchError((error) => throwError(() => new HttpException(error.message, HttpStatus.INTERNAL_SERVER_ERROR)))
+      )
+    );
+  }
 }

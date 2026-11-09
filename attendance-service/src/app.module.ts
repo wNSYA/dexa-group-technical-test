@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AttendanceModule } from './attendance/attendance.module';
 
 @Module({
@@ -23,11 +21,10 @@ import { AttendanceModule } from './attendance/attendance.module';
         database: 'attendance_db', // Explicitly use the Attendance database
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: true,
+        timezone: 'Z',
       }),
     }),
     AttendanceModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}
