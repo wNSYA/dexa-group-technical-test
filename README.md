@@ -1,109 +1,117 @@
-# Simple Attendance Website
+# HR Portal
 
-A full-stack application built with **React** (via Vite), **NestJS**, and **MySQL**.
+A robust, scalable employee attendance system built with NestJS, React, and MySQL. This project uses a microservices architecture to separate user identity management from attendance tracking, orchestrated by an API Gateway.
 
-## Tech Stack
+## Features
 
-- **Frontend**: React, TypeScript, Vite
-- **Backend**: NestJS, TypeScript, Node.js
-- **Database**: MySQL (containerized via Docker)
-- **Package Manager**: npm
+* **Microservices Architecture:** Independent Identity and Attendance services communicating via TCP.
+
+* **API Gateway:** Centralized REST entry point handling JWT authentication, Role-Based Access Control (RBAC), and API composition.
+
+* **Live Webcam Check-in:** Real-time photo capture and local storage for employee clock-in/out.
+
+* **Admin Dashboard:** Full CRUD management for employee accounts and a consolidated view of attendance logs.
 
 ## Project Structure
 
-This repository uses a root-level configuration for environment variables and Docker, with the frontend and backend in separate directories:
-
-```text
+```
 .
-├── docker-compose.yml   # Database and container configuration
-├── .env.example         # Example environment variables template
-├── .env                 # Local environment variables (Ignored in Git)
-├── .gitignore           # Root gitignore rules
-├── backend/             # NestJS API
-│   ├── package.json
-│   └── src/
-└── frontend/            # Vite + React App
-    ├── package.json
-    └── src/
+├── api-gateway/          # REST API, Auth/RBAC, and TCP Client router
+├── identity-service/     # TCP Microservice: Accounts, Employees, Roles
+├── attendance-service/   # TCP Microservice: Check-ins, Check-outs, File Storage
+├── frontend/             # React SPA (Admin Dashboard & Camera UI)
+└── docker-compose.yml    # MySQL Database infrastructure
+
 ```
 
 ## Prerequisites
 
-Before you begin, ensure you have the following installed:
+* [Node.js](https://nodejs.org/) (v18+)
 
-- [Node.js](https://nodejs.org/) (v18 or higher recommended)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (to run the local database)
-- npm, yarn, or pnpm
+* [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for the MySQL database)
 
-## Getting Started
+## How to Run Locally
 
-### 1. Clone the repository and configure environment
+### 1. Start the Database
 
-```bash
-git clone https://github.com/wNSYA/dexa-group-technical-test.git
-cd dexa-group-technical-test
+The project uses Docker to run a local MySQL database. From the root directory:
 
-# Copy the example environment file and configure your variables
+```
+# Duplicate env.example to .env
 cp .env.example .env
+
+# Set up database
+docker-compose up -d
 ```
 
-### 2. Database Setup (Docker)
+### 2. Install Dependencies
 
-Start the MySQL database container in the background from the root directory:
+Open four separate terminal windows and install the dependencies for each package:
 
-```bash
-docker compose up -d
 ```
-*(The database will run on `localhost:3306`. To stop it later, run `docker compose down`.)*
+# Terminal 1
+cd identity-service && npm install
 
-### 3. Backend Setup (NestJS)
+# Terminal 2
+cd attendance-service && npm install
 
-Open a new terminal window and navigate to the backend directory:
+# Terminal 3
+cd api-gateway && npm install
 
-```bash
-cd backend
+# Terminal 4
+cd frontend && npm install
 
-# Install dependencies
-npm install
+```
 
-# Start the development server
+### 3. Seed the Database
+
+Before logging in, you must seed the database with the initial Admin account and default roles. Run the seed script from inside the `identity-service`:
+
+```
+cd identity-service
+npm run seed
+
+```
+
+### 4. Start the Backend Services
+
+You must start the microservices before starting the API Gateway, so the Gateway can successfully establish the TCP connections.
+
+**Terminal 1 (Identity Service):**
+
+```
+cd identity-service
 npm run start:dev
+
 ```
 
-The NestJS API will typically run on `http://localhost:3000`.
+**Terminal 2 (Attendance Service):**
 
-### 4. Frontend Setup (Vite + React)
+```
+cd attendance-service
+npm run start:dev
 
-Open another terminal window and navigate to the frontend directory:
+```
 
-```bash
+**Terminal 3 (API Gateway):**
+
+```
+cd api-gateway
+npm run start:dev
+
+```
+
+### 5. Start the Frontend
+
+**Terminal 4 (React Frontend):**
+
+```
 cd frontend
-
-# Install dependencies
-npm install
-
-# Start the development server
 npm run dev
+
 ```
 
-The Vite frontend will typically run on `http://localhost:5173`.
+### 6. Access the Application
 
-## Available Scripts
-
-### Backend (run inside `/backend`)
-
-- `npm run start:dev` - Starts the application in watch mode
-- `npm run build` - Builds the application for production
-
-### Frontend (run inside `/frontend`)
-
-- `npm run dev` - Starts the Vite development server
-- `npm run build` - Builds the React app for production
-
-## Deployment
-
-**Database**: Provision a managed MySQL database (e.g., AWS RDS, DigitalOcean, etc.) and update your production environment variables.
-
-**Backend**: Build the NestJS app using `npm run build` and deploy the output in the `dist/` directory to your Node.js hosting provider.
-
-**Frontend**: Build the React app using `npm run build` and deploy the output in the `dist/` directory to your static hosting provider.
+Open your browser and navigate to `http://localhost:5173` (or the port specified by your frontend).
+Log in using the Admin credentials generated by your seed script.
