@@ -13,12 +13,6 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // 2. Serve static files from the 'uploads' folder
-  // When a user hits /uploads/..., it looks in the local ./uploads directory
-  app.useStaticAssets(join(__dirname, '..', 'uploads'), {
-    prefix: '/uploads/',
-  });
-
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

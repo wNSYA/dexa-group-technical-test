@@ -1,6 +1,7 @@
 // frontend/src/AdminDashboard.tsx
 import React, { useEffect, useState } from 'react';
 import api from './api';
+import { SecureImage } from './SecureImage';
 
 export const AdminDashboard: React.FC = () => {
   const [records, setRecords] = useState<any[]>([]);
@@ -34,7 +35,11 @@ export const AdminDashboard: React.FC = () => {
                 {record.type}
               </td>
               <td>
-                <img src={record.photoUrl} alt="Check-in" style={{ width: '60px', borderRadius: '4px' }} />
+                <SecureImage 
+                  url={record.photoUrl} 
+                  alt="Check-in" 
+                  style={{ width: '60px', height: '45px', borderRadius: '4px', objectFit: 'cover' }} 
+                />
               </td>
             </tr>
           ))}
